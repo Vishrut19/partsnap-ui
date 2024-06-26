@@ -1,5 +1,5 @@
-const DashboardPage = () => {
-  return <div>Dashboard Page</div>;
-};
+"use client";
 
-export default DashboardPage;
+export default function DashboardPage() {
+  return <></>;
+}
