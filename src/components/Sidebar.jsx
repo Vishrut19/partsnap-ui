@@ -51,7 +51,7 @@ export default function Sidebar() {
                           className={classNames(
                             item.current
                               ? "bg-white text-[#194BFB]"
-                              : "text-white hover:bg-indigo-700 hover:text-white",
+                              : "text-white hover:bg-white hover:text-[#194BFB]",
                             "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
                           )}
                         >
@@ -59,7 +59,7 @@ export default function Sidebar() {
                             className={classNames(
                               item.current
                                 ? "text-[#194BFB]"
-                                : "text-white group-hover:text-white",
+                                : "text-white group-hover:text-[#194BFB]",
                               "h-6 w-6 shrink-0"
                             )}
                             aria-hidden="true"
