@@ -1,5 +1,6 @@
 import DatePicker from "@/components/DatePicker";
 import SessionHistory from "@/components/SessionHistory";
+import TagComponent from "@/components/TagComponent";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
 const InventoryManagementPage = () => {
@@ -66,6 +67,7 @@ const InventoryManagementPage = () => {
                         Add New Tag
                       </a>
                     </div>
+                    <TagComponent />
                   </div>
                   <br />
                   <div>
@@ -96,6 +98,7 @@ const InventoryManagementPage = () => {
                         Add New Tag
                       </a>
                     </div>
+                    <TagComponent />
                   </div>
                   <br />
                   <div>
@@ -156,7 +159,7 @@ const InventoryManagementPage = () => {
                   </div>
                 </div>
               </div>
-              <div className="flex items-center justify-center mt-[150px]">
+              <div className="flex items-center justify-center mt-[90px]">
                 <button
                   type="submit"
                   className="w-[232px] h-[48px] rounded-md bg-[#194BFB] px-[30px] py-[12px] shadow-sm hover:bg-[#2250f7] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
