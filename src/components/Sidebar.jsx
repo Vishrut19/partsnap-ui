@@ -1,5 +1,6 @@
 "use client";
 import {
+  ArrowLeftStartOnRectangleIcon,
   Cog6ToothIcon,
   FolderIcon,
   HomeIcon,
@@ -49,16 +50,16 @@ export default function Sidebar() {
                           href={item.href}
                           className={classNames(
                             item.current
-                              ? "bg-indigo-700 text-white"
-                              : "text-indigo-200 hover:bg-indigo-700 hover:text-white",
+                              ? "bg-white text-[#194BFB]"
+                              : "text-white hover:bg-indigo-700 hover:text-white",
                             "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
                           )}
                         >
                           <item.icon
                             className={classNames(
                               item.current
-                                ? "text-white"
-                                : "text-indigo-200 group-hover:text-white",
+                                ? "text-[#194BFB]"
+                                : "text-white group-hover:text-white",
                               "h-6 w-6 shrink-0"
                             )}
                             aria-hidden="true"
@@ -72,10 +73,10 @@ export default function Sidebar() {
                 <li className="mt-auto">
                   <a
                     href="#"
-                    className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-indigo-200 hover:bg-indigo-700 hover:text-white"
+                    className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-white hover:bg-indigo-700 hover:text-white"
                   >
-                    <Cog6ToothIcon
-                      className="h-6 w-6 shrink-0 text-indigo-200 group-hover:text-white"
+                    <ArrowLeftStartOnRectangleIcon
+                      className="h-6 w-6 shrink-0 text-white group-hover:text-white"
                       aria-hidden="true"
                     />
                     Logout
