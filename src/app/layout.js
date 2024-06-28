@@ -22,7 +22,7 @@ export default function RootLayout({ children }) {
           <>
             <Sidebar />
             <Navbar />
-            <main>{children}</main>
+            <main className="bg-[#F4F7FF]">{children}</main>
           </>
         )}
       </body>

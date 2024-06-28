@@ -5,12 +5,8 @@ import LoginPage from "./page";
 const LoginLayout = () => {
   return (
     <div className="flex bg-white">
-      <div className="flex-none">
-        <LoginSidebar />
-      </div>
-      <div className="flex-1">
-        <LoginPage />
-      </div>
+      <LoginSidebar />
+      <LoginPage />
     </div>
   );
 };

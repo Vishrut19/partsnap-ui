@@ -1,12 +1,12 @@
 "use client";
 import {
   ArrowLeftStartOnRectangleIcon,
-  Cog6ToothIcon,
   FolderIcon,
   HomeIcon,
   UsersIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const navigation = [
   {
@@ -24,6 +24,7 @@ function classNames(...classes) {
 }
 
 export default function Sidebar() {
+  const router = useRouter();
   return (
     <>
       <div>
@@ -73,10 +74,11 @@ export default function Sidebar() {
                 <li className="mt-auto">
                   <a
                     href="#"
-                    className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-white hover:bg-indigo-700 hover:text-white"
+                    className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-white hover:bg-white hover:text-[#194BFB]"
+                    onClick={() => router.push("/login")}
                   >
                     <ArrowLeftStartOnRectangleIcon
-                      className="h-6 w-6 shrink-0 text-white group-hover:text-white"
+                      className="h-6 w-6 shrink-0 text-white group-hover:text-[#194BFB]"
                       aria-hidden="true"
                     />
                     Logout
