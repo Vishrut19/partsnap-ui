@@ -1,9 +1,12 @@
+"use client";
 import DatePicker from "@/components/DatePicker";
 import SessionHistory from "@/components/SessionHistory";
 import TagComponent from "@/components/TagComponent";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { useRouter } from "next/navigation";
 
 const InventoryManagementPage = () => {
+  const router = useRouter();
   return (
     <>
       <div className="bg-[#F4F7FF] lg:pl-72 flex justify-content-between">
@@ -161,7 +164,8 @@ const InventoryManagementPage = () => {
               </div>
               <div className="flex items-center justify-center mt-[90px]">
                 <button
-                  type="submit"
+                  type="button"
+                  onClick={() => router.push("/item-receipt")}
                   className="w-[232px] h-[48px] rounded-md bg-[#194BFB] px-[30px] py-[12px] shadow-sm hover:bg-[#2250f7] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
                   <span className="text-white font-bold text-lg leading-[18px]">
@@ -172,7 +176,7 @@ const InventoryManagementPage = () => {
             </form>
           </div>
         </main>
-        <div className="mt-16 ml-6">
+        <div className="mt-[76px] ml-6">
           <SessionHistory />
         </div>
       </div>
