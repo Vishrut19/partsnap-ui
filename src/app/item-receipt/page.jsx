@@ -103,7 +103,7 @@ const ItemReceiptPage = () => {
               <div className="flex mt-6 justify-center">
                 <button
                   type="button"
-                  className="ml-3 border-[#194BFB] border-[1px] w-[249px] h-[42px] bg-white gap-[10px] px-[20px] py-[12px] hover:bg-indigo-100 rounded-[10px] flex items-center justify-center"
+                  className="ml-5 border-[#194BFB] border-[1px] w-[249px] h-[42px] bg-white gap-[10px] px-[20px] py-[12px] hover:bg-indigo-100 rounded-[10px] flex items-center justify-center"
                 >
                   <span className="text-[#194BFB] text-md font-semibold leading-none">
                     View Notes (2 Available)
