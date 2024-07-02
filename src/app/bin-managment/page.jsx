@@ -62,7 +62,7 @@ const BinAssignmentPage = () => {
                 <div className="flex justify-center mt-[50px]">
                   <button
                     type="button"
-                    className="w-[164px] h-[48px] bg-[#4EAB37] rounded-[10px]"
+                    className="w-[164px] h-[48px] bg-[#4EAB37] rounded-[10px] hover:bg-[#4ba435]"
                     onClick={() => router.push("/bin-managment")}
                   >
                     <span className="text-white text-lg font-semibold leading-none">

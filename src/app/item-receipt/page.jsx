@@ -122,7 +122,7 @@ const ItemReceiptPage = () => {
                 <div className="flex gap-[10px] justify-center">
                   <button
                     type="button"
-                    className="mt-2 w-[154px] h-[48px] px-[30px] pb-[15px] pt-[12px] border-[1px] border-[#194BFB] rounded-[10px]"
+                    className="mt-2 w-[154px] h-[48px] px-[30px] pb-[15px] pt-[12px] border-[1px] border-[#194BFB] rounded-[10px] hover:bg-indigo-100"
                   >
                     <span className="text-[#194BFB] text-md font-semibold leading-[18px]">
                       View Label
@@ -130,7 +130,7 @@ const ItemReceiptPage = () => {
                   </button>
                   <button
                     type="button"
-                    className="mt-2 w-[154px] h-[48px] px-[30px] pb-[15px] pt-[12px] border-[1px] border-[#194BFB] rounded-[10px]"
+                    className="mt-2 w-[154px] h-[48px] px-[30px] pb-[15px] pt-[12px] border-[1px] border-[#194BFB] rounded-[10px] hover:bg-indigo-100"
                   >
                     <span className="text-[#194BFB] text-md font-semibold leading-[18px]">
                       Print Label
@@ -142,7 +142,7 @@ const ItemReceiptPage = () => {
               <div className="flex justify-center ml-[40px] mt-[50px]">
                 <button
                   type="button"
-                  className="w-[249px] h-[48px] bg-[#4EAB37] rounded-[10px]"
+                  className="w-[249px] h-[48px] bg-[#4EAB37] rounded-[10px] hover:bg-[#4ba435]"
                   onClick={() => router.push("/bin-managment")}
                 >
                   <span className="text-white text-lg font-semibold leading-none">
