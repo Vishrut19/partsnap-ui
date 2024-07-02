@@ -25,7 +25,7 @@ const ItemReceiptPage = () => {
             <div className="mt-[38px] w-[747px] h-[756px]">
               <div className="flex">
                 {/* Left Side */}
-                <div className="flex flex-col mr-3">
+                <div className="flex flex-col mr-[1px]">
                   <div className="flex mb-3">
                     <span className="text-[#718096]">Part Number :</span>
                     <span className="ml-[100px] text-base text-[#1A202C] font-bold">
@@ -55,8 +55,10 @@ const ItemReceiptPage = () => {
                     </span>
                   </div>
                   <div className="flex mb-3">
-                    <span className="text-[#718096]">Receiving Tags :</span>
-                    <span className="ml-[78px] text-base text-[#1A202C] font-bold">
+                    <span className="w-[113px] h-[16px] text-[#718096]">
+                      Receiving Tags :
+                    </span>
+                    <span className="mt-2 ml-[95px] text-base text-[#1A202C] font-bold leading-4 text-pretty">
                       Bobs_Rocket, Rocket, Consigned
                     </span>
                   </div>
@@ -88,7 +90,7 @@ const ItemReceiptPage = () => {
                   </div>
                   <div className="flex mb-3">
                     <span className="text-[#718096]">Receipt Date:</span>
-                    <span className="ml-[40px] text-sm text-[#1A202C] font-bold">
+                    <span className="ml-[40px] text-base text-[#1A202C] font-bold">
                       01 March, 2024
                     </span>
                   </div>
