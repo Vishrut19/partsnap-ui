@@ -10,6 +10,7 @@ const LoginSidebar = () => {
             src="/assets/loginPageImage.png"
             width={562}
             height={600}
+            alt="Login Page Image"
             className="mt-[30px] ml-[30px] rounded-[12px]"
           />
           <div className="flex flex-col items-center justify-center">

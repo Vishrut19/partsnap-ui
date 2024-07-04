@@ -118,6 +118,7 @@ const ItemReceiptPage = () => {
                   src="/assets/receiptImage.png"
                   width={488}
                   height={288}
+                  alt="Receipt Image"
                 />
                 <div className="flex gap-[10px] justify-center">
                   <button
