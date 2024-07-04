@@ -1,39 +1,10 @@
 "use client";
-import { useEffect } from "react";
 import { EnvelopeIcon, LockClosedIcon } from "@heroicons/react/20/solid";
 import { EyeSlashIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
-import axios from "axios";
 
 const LoginPage = () => {
   const router = useRouter();
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          "https://567c-106-222-200-94.ngrok-free.app/locations/",
-          {
-            auth: {
-              username: "admin",
-              password: "",
-            },
-            headers: {
-              accept: "application/json",
-              Authorization: "Basic YWRtaW46",
-              "ngrok-skip-browser-warning": "69420",
-            },
-          }
-        );
-        // Console log the response data
-        console.log(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
   return (
     <>
       <div className="flex w-[494px] h-full ml-[833px] mt-[171px]">
