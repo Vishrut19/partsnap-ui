@@ -20,6 +20,7 @@ const useGetSessions = () => {
           }
         );
         console.log(response.data);
+        return setSessions(response.data);
       } catch (error) {
         console.error("Error Fetching Data", error);
       }

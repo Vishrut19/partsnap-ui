@@ -1,12 +1,29 @@
 "use client";
+import { useState } from "react";
 import DatePicker from "@/components/DatePicker";
 import SessionHistory from "@/components/SessionHistory";
 import TagComponent from "@/components/TagComponent";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
+import useGetTags from "@/hooks/useGetTags";
 
 const InventoryManagementPage = () => {
   const router = useRouter();
+  const [receivingTagQuery, setReceivingTagQuery] = useState("");
+  const [customerTagQuery, setCustomerTagQuery] = useState("");
+  const {
+    tags: receivingTags,
+    isLoading,
+    error,
+  } = useGetTags(2, receivingTagQuery);
+  const {
+    tags: customerTags,
+    isLoading: customerTagsLoading,
+    error: customerTagsError,
+  } = useGetTags(1, customerTagQuery);
+
+  console.log(customerTagQuery);
+
   return (
     <>
       <div className="bg-[#F4F7FF] lg:pl-72 flex justify-content-between">
@@ -56,6 +73,8 @@ const InventoryManagementPage = () => {
                           name="receiving-tag"
                           placeholder="Search Tag"
                           id="receiving-tag"
+                          value={receivingTagQuery}
+                          onChange={(e) => setReceivingTagQuery(e.target.value)}
                           className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 pr-8"
                         />
                         <MagnifyingGlassIcon
@@ -70,7 +89,15 @@ const InventoryManagementPage = () => {
                         Add New Tag
                       </a>
                     </div>
-                    <TagComponent />
+                    {isLoading ? (
+                      <p>Loading...</p>
+                    ) : error ? (
+                      <p className="text-red-500">{error}</p>
+                    ) : receivingTagQuery && receivingTags.length === 0 ? (
+                      <p className="text-red-500">TAG NOT FOUND</p>
+                    ) : (
+                      <TagComponent tags={receivingTags} />
+                    )}
                   </div>
                   <br />
                   <div>
@@ -87,6 +114,8 @@ const InventoryManagementPage = () => {
                           name="customer-tag"
                           placeholder="Search Tag"
                           id="customer-tag"
+                          value={customerTagQuery}
+                          onChange={(e) => setCustomerTagQuery(e.target.value)}
                           className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 pr-8"
                         />
                         <MagnifyingGlassIcon
@@ -101,7 +130,15 @@ const InventoryManagementPage = () => {
                         Add New Tag
                       </a>
                     </div>
-                    <TagComponent />
+                    {customerTagsLoading ? (
+                      <p>Loading...</p>
+                    ) : customerTagsError ? (
+                      <p className="text-red-500">{customerTagsError}</p>
+                    ) : customerTagQuery && customerTags.length === 0 ? (
+                      <p className="text-red-500">TAG NOT FOUND</p>
+                    ) : (
+                      <TagComponent tags={customerTags} />
+                    )}
                   </div>
                   <br />
                   <div>
