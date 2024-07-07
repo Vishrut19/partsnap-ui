@@ -8,7 +8,7 @@ const TagComponent = ({ tags }) => {
           className="border-[#194BFB99] border-[1px] rounded-[40px] w-[150px] h-[30px] bg-[#194BFB1A] px-[12px] pt-[1px] pb-[8px]"
         >
           <span className="text-[#194BFB] text-sm leading-[14px] font-medium">
-            {tag.name}
+            {tag.name.charAt(0).toUpperCase() + tag.name.slice(1)}
           </span>
         </button>
       ))}

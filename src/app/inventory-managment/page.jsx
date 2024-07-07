@@ -6,6 +6,7 @@ import TagComponent from "@/components/TagComponent";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 import useGetTags from "@/hooks/useGetTags";
+import useCreateTag from "@/hooks/useCreateTag";
 
 const InventoryManagementPage = () => {
   const router = useRouter();
@@ -21,6 +22,41 @@ const InventoryManagementPage = () => {
     isLoading: customerTagsLoading,
     error: customerTagsError,
   } = useGetTags(1, customerTagQuery);
+
+  const {
+    createTagType,
+    createTag,
+    isLoading: createTagLoading,
+    error: createTagError,
+  } = useCreateTag();
+
+  const handleAddNewCustomerTag = async () => {
+    try {
+      // Create a new tag with the customer tag type (tag_type_id: 1)
+      await createTag(customerTagQuery, 1);
+
+      // Reset the customer tag query
+      setCustomerTagQuery("");
+
+      // Optionally, you can update the customerTags list here
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleAddNewReceivingTag = async () => {
+    try {
+      // Create a new tag with the receiving tag type (tag_type_id: 2)
+      await createTag(receivingTagQuery, 2);
+
+      // Reset the receiving tag query
+      setReceivingTagQuery("");
+
+      // Optionally, you can update the receivingTags list here
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
@@ -82,6 +118,7 @@ const InventoryManagementPage = () => {
                       </div>
                       <a
                         href="#"
+                        onClick={handleAddNewReceivingTag}
                         className="ml-2 mt-4 text-[#194BFB] text-base font-medium leading-4 underline"
                       >
                         Add New Tag
@@ -123,6 +160,7 @@ const InventoryManagementPage = () => {
                       </div>
                       <a
                         href="#"
+                        onClick={handleAddNewCustomerTag}
                         className="ml-2 mt-4 text-[#194BFB] text-base font-medium leading-4 underline"
                       >
                         Add New Tag
