@@ -1,6 +1,5 @@
 "use client";
 const TagComponent = ({ tags }) => {
-  console.log(tags);
   return (
     <div className="flex flex-row w-full gap-[6px] mt-2">
       {tags?.map((tag) => (

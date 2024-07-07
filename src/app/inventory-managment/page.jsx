@@ -22,8 +22,6 @@ const InventoryManagementPage = () => {
     error: customerTagsError,
   } = useGetTags(1, customerTagQuery);
 
-  console.log(customerTagQuery);
-
   return (
     <>
       <div className="bg-[#F4F7FF] lg:pl-72 flex justify-content-between">
@@ -37,7 +35,7 @@ const InventoryManagementPage = () => {
                 Select how would you like the receiving process to begin
               </p>
             </div>
-            <div className="flex ml-44">
+            {/* <div className="flex ml-44">
               <div className="bg-white mt-4 w-[450px] h-[60px] rounded-[10px] border-[#E2E8F0] border-[1px] p-[4px] gap-[4px]">
                 <button
                   type="button"
@@ -52,7 +50,7 @@ const InventoryManagementPage = () => {
                   Resume Paused Session
                 </button>
               </div>
-            </div>
+            </div> */}
           </div>
           {/* Main Content */}
           <div className="mt-5 ml-5 bg-white w-[787px] h-[728px] rounded-[10px]">
@@ -134,7 +132,7 @@ const InventoryManagementPage = () => {
                       <p>Loading...</p>
                     ) : customerTagsError ? (
                       <p className="text-red-500">{customerTagsError}</p>
-                    ) : customerTagQuery && customerTags.length === 0 ? (
+                    ) : customerTagQuery && customerTags.length == 0 ? (
                       <p className="text-red-500">TAG NOT FOUND</p>
                     ) : (
                       <TagComponent tags={customerTags} />
@@ -160,7 +158,7 @@ const InventoryManagementPage = () => {
                         className="ml-3 border-[#194BFB] border-[1px] w-[192px] h-12 bg-white gap-[10px] px-[26px] py-[13px] hover:bg-indigo-100 rounded-[10px] flex items-center justify-center"
                       >
                         <span className="text-[#194BFB] text-md font-semibold leading-none">
-                          Add Attachment
+                          Add PO
                         </span>
                       </button>
                     </div>

@@ -12,33 +12,35 @@ const useGetTags = (tagType, searchQuery) => {
       setError(null);
 
       try {
-        const response = await axios.get(
-          `http://ec2-3-110-148-101.ap-south-1.compute.amazonaws.com:8050/tags/?tag_type_id=${tagType}&search=${searchQuery}`,
-          {
-            auth: {
-              username: "admin",
-              password: "",
-            },
-            headers: {
-              accept: "application/json",
-              Authorization: "Basic YWRtaW46",
-            },
-          }
-        );
-        console.log(response.data);
-        setTags(response.data);
+        if (searchQuery) {
+          const response = await axios.get(
+            `http://ec2-3-110-148-101.ap-south-1.compute.amazonaws.com:8050/tags/?tag_type_id=${tagType}`,
+            {
+              auth: {
+                username: "admin",
+                password: "",
+              },
+              headers: {
+                accept: "application/json",
+                Authorization: "Basic YWRtaW46",
+              },
+            }
+          );
+          const filteredTags = response.data.filter((tag) =>
+            tag.name.toLowerCase().includes(searchQuery.toLowerCase())
+          );
+          setTags(filteredTags);
+        } else {
+          setTags([]);
+        }
       } catch (error) {
-        setError("Error fetching tags");
+        setError("Error fetching tags", error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    if (searchQuery) {
-      fetchData();
-    } else {
-      setTags([]);
-    }
+    fetchData();
   }, [tagType, searchQuery]);
 
   return { tags, isLoading, error };
