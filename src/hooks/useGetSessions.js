@@ -7,7 +7,7 @@ const useGetSessions = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://ec2-3-110-148-101.ap-south-1.compute.amazonaws.com:8050/sessions/`,
+          `${process.env.NEXT_PUBLIC_API_URL}/sessions/`,
           {
             auth: {
               username: "admin",

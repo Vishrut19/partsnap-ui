@@ -7,7 +7,7 @@ const useGetLocations = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://ec2-3-110-148-101.ap-south-1.compute.amazonaws.com:8050/locations/`,
+          `${process.env.NEXT_PUBLIC_API_URL}/locations/`,
           {
             auth: {
               username: "admin",

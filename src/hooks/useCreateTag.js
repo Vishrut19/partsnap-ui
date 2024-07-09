@@ -11,7 +11,7 @@ const useCreateTag = () => {
 
     try {
       const response = await axios.post(
-        "http://ec2-3-110-148-101.ap-south-1.compute.amazonaws.com:8050/tags/",
+        `${process.env.NEXT_PUBLIC_API_URL}/tags/`,
         {
           name,
           description: "",
@@ -28,7 +28,7 @@ const useCreateTag = () => {
           },
         }
       );
-      console.log("Tag created successfully:", response.data);
+      console.log;
       return response.data;
     } catch (error) {
       setError("Error creating tag");

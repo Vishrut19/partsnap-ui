@@ -14,7 +14,7 @@ const useGetTags = (tagType, searchQuery) => {
       try {
         if (searchQuery) {
           const response = await axios.get(
-            `http://ec2-3-110-148-101.ap-south-1.compute.amazonaws.com:8050/tags/?tag_type_id=${tagType}`,
+            `${process.env.NEXT_PUBLIC_API_URL}/tags/?tag_type_id=${tagType}`,
             {
               auth: {
                 username: "admin",
