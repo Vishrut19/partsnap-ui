@@ -7,8 +7,8 @@ const LoginPage = () => {
   const router = useRouter();
   return (
     <>
-      <div className="flex w-[494px] h-full ml-[833px] mt-[171px]">
-        <div>
+      <div className="flex items-center justify-center min-h-screen w-[494px] h-full ml-[833px] mt-[171px]">
+        <div className="max-w-md w-full lg:max-w-xl">
           <h1 className="text-[#1A202C] font-bold text-3xl leading-[30px]">
             Login
           </h1>

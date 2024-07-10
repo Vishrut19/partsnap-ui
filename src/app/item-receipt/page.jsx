@@ -8,8 +8,8 @@ const ItemReceiptPage = () => {
   const router = useRouter();
   return (
     <div className="bg-[#F4F7FF] lg:pl-72 flex justify-content-between">
-      <main className="py-10">
-        <div className="px-4 sm:px-6 lg:px-8">
+      <main className="py-10 xl:mx-auto max-w-7xl">
+        <div className="px-4 lg:px-8">
           <div>
             <h1 className="text-[#1A202C] font-semibold text-2xl leading-6">
               Inventory Management
@@ -155,7 +155,7 @@ const ItemReceiptPage = () => {
           </div>
         </div>
       </main>
-      <div className="mt-[82px] ml-6">
+      <div className="mt-[82px] ml-6 xl:mr-32">
         <SessionHistory />
       </div>
     </div>
