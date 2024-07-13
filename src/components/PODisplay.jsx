@@ -1,7 +1,7 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 
-const AttachmentDisplay = ({ fileName }) => {
+const PODisplay = ({ fileName }) => {
   return (
     <>
       <div className="mt-4 w-[712.59px] h-[94px] rounded-[10px] border-[1px] border-[#E2E8F0]">
@@ -11,7 +11,7 @@ const AttachmentDisplay = ({ fileName }) => {
               src="/assets/attachmentImage.png"
               width={96.59}
               height={68}
-              alt="Attachment Image"
+              alt="PO Image"
             />
             <div className="flex flex-col">
               <span className="ml-4 mt-4 text-base leading-4 font-medium text-[#1A202C]">
@@ -31,4 +31,4 @@ const AttachmentDisplay = ({ fileName }) => {
   );
 };
 
-export default AttachmentDisplay;
+export default PODisplay;

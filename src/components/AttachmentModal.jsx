@@ -6,7 +6,8 @@ import { ArrowRightIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 import useUploadAttachment from "@/hooks/useUploadAttachment";
 
-export default function AttachmentModal({ onClose }) {
+export default function AttachmentModal({ onClose, onUpload }) {
+  const router = useRouter();
   const { uploadAttachment, isLoading, error } = useUploadAttachment();
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -27,6 +28,8 @@ export default function AttachmentModal({ onClose }) {
       await uploadAttachment(selectedFile, attachmentTypeId);
       // Handle successful upload
       console.log("Attachment uploaded successfully");
+      onUpload(selectedFile.name);
+      onClose();
     } catch (error) {
       // Handle error
       console.error("Error uploading attachment:", error);
@@ -62,11 +65,6 @@ export default function AttachmentModal({ onClose }) {
   };
 
   const handleNextClick = () => {
-    // Update the URL pathname with the uploaded document name
-    const url = new URL(window.location.href);
-    url.pathname = `/preview/${selectedFile?.name}`;
-    window.history.pushState({}, "", url.toString());
-
     // Increase the modal height
     const modal = document.querySelector(".modal");
     modal.style.height = "500px";
