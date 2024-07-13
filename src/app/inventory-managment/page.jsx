@@ -8,12 +8,22 @@ import { useRouter } from "next/navigation";
 import useGetTags from "@/hooks/useGetTags";
 import useCreateTag from "@/hooks/useCreateTag";
 import AttachmentModal from "@/components/AttachmentModal";
+import useUploadAttachment from "@/hooks/useUploadAttachment";
+import AttachmentDisplay from "@/components/AttachmentDisplay";
 
 const InventoryManagementPage = () => {
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
   const [receivingTagQuery, setReceivingTagQuery] = useState("");
   const [customerTagQuery, setCustomerTagQuery] = useState("");
+  const [uploadedFileName, setUploadFileName] = useState("");
+
+  const {
+    uploadAttachment,
+    isLoading: isUploading,
+    error: uploadError,
+  } = useUploadAttachment();
+
   const {
     tags: receivingTags,
     isLoading,
@@ -43,6 +53,21 @@ const InventoryManagementPage = () => {
       // Optionally, you can update the customerTags list here
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  // Handle File Upload
+  const handleFileUpload = async (event) => {
+    const file = event.target.files[0];
+    const attachmentTypeId = file?.type?.startsWith("image/") ? 4 : 1; // 4 for image, 1 for document
+    try {
+      await uploadAttachment(file, attachmentTypeId);
+      // Handle successful upload
+      console.log("Attachment uploaded successfully");
+      setUploadFileName(file.name);
+    } catch (error) {
+      // Handle error
+      console.error("Error uploading attachment:", error);
     }
   };
 
@@ -195,20 +220,33 @@ const InventoryManagementPage = () => {
                         <input
                           id="text"
                           name="purchase-order"
+                          placeholder="Upload Purchase Order to Receipt"
                           type="text"
+                          value={uploadedFileName}
+                          readOnly
                           className="block w-[70%] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         />
-                        <button
-                          type="button"
-                          onClick={() => setShowModal(true)}
-                          className="ml-3 border-[#194BFB] border-[1px] w-[192px] h-12 bg-white gap-[10px] px-[26px] py-[13px] hover:bg-indigo-100 rounded-[10px] flex items-center justify-center"
+                        <label
+                          htmlFor="file-upload"
+                          className="ml-3 border-[#194BFB] border-[1px] w-[192px] h-12 bg-white gap-[10px] px-[26px] py-[13px] hover:bg-indigo-100 rounded-[10px] flex items-center justify-center cursor-pointer"
                         >
                           <span className="text-[#194BFB] text-md font-semibold leading-none">
-                            Add PO
+                            {isUploading ? "Uploading..." : "Add PO"}
                           </span>
-                        </button>
+                        </label>
+                        <input
+                          id="file-upload"
+                          type="file"
+                          accept=".pdf,image/*"
+                          onChange={handleFileUpload}
+                          className="hidden"
+                        />
                       </div>
+                      {uploadError && (
+                        <p className="text-red-500 mt-2">{uploadError}</p>
+                      )}
                     </div>
+                    <AttachmentDisplay />
                     <br />
                     <div>
                       <label
@@ -230,6 +268,7 @@ const InventoryManagementPage = () => {
                         </button>
                       </div>
                     </div>
+                    <AttachmentDisplay />
                     <br />
                     <div>
                       <label
