@@ -2,11 +2,14 @@
 
 import useGetSessions from "@/hooks/useGetSessions";
 
-const SessionHistory = () => {
+const SessionHistory = ({ height }) => {
   const sessions = useGetSessions();
   return (
     <>
-      <div className="w-[300px] h-[760px] overflow-scroll rounded-md border-[#E2E8F0] border-[1px] bg-white">
+      <div
+        className="w-[300px] h-[760px] overflow-scroll rounded-md border-[#E2E8F0] border-[1px] bg-white"
+        style={{ height: height || "760px" }}
+      >
         <h1 className=" flex justify-center text-[#1A202C] leading-5 text-xl font-semibold mt-4">
           Resume Session
         </h1>
@@ -16,11 +19,8 @@ const SessionHistory = () => {
 
         <ul className="w-[250px] h-[66%] ml-6 mt-3">
           {sessions.map((session) => (
-            <>
-              <li
-                key={session.id}
-                className="flex flex-col bg-[#F4F7FF] rounded-[10px] px-6 py-4 mb-3"
-              >
+            <div key={session.id}>
+              <li className="flex flex-col bg-[#F4F7FF] rounded-[10px] px-6 py-4 mb-3">
                 <div className="flex justify-between">
                   <div>
                     <span className="leading-[13px] mt-2 text-sm font-medium text-[#1A202C]">
@@ -51,7 +51,7 @@ const SessionHistory = () => {
                   </button>
                 </div>
               </li>
-            </>
+            </div>
           ))}
         </ul>
       </div>

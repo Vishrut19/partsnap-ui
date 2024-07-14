@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Datepicker from "react-tailwindcss-datepicker";
 
-export default function DatePicker() {
+export default function DatePicker({ className }) {
   const [value, setValue] = useState(new Date());
 
   const handleValueChange = (newValue) => {
@@ -13,7 +13,7 @@ export default function DatePicker() {
   return (
     <div>
       <Datepicker
-        inputClassName="bg-white rounded-[10px] w-[271px] border-[#E2E8F0] border-[1px]"
+        inputClassName={`bg-white rounded-[10px] border-[#E2E8F0] border-[1px] ${className}`}
         startFrom="2024-03-01"
         displayFormat="DD MMMM, YYYY"
         value={value}

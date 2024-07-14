@@ -11,6 +11,8 @@ import AttachmentModal from "@/components/AttachmentModal";
 import useUploadAttachment from "@/hooks/useUploadAttachment";
 import AttachmentDisplay from "@/components/AttachmentDisplay";
 import PODisplay from "@/components/PODisplay";
+import useCreateSession from "@/hooks/useCreateSession";
+import useGetSessions from "@/hooks/useGetSessions";
 
 const InventoryManagementPage = () => {
   const router = useRouter();
@@ -21,6 +23,10 @@ const InventoryManagementPage = () => {
   const [uploadedFile, setUploadedFile] = useState(null);
   const [selectedReceivingTags, setSelectedReceivingTags] = useState([]);
   const [selectedCustomerTags, setSelectedCustomerTags] = useState([]);
+
+  const { createSession, isLoading: isCreatingSession } = useCreateSession();
+
+  const sessions = useGetSessions();
 
   const {
     uploadAttachment,
@@ -100,6 +106,18 @@ const InventoryManagementPage = () => {
         return [...prevTags, tag];
       }
     });
+  };
+
+  // Handle Begin Receiving
+  const handleBeginReceiving = async () => {
+    try {
+      const nextSessionNumber = sessions.length + 1;
+      const sessionName = `session_${nextSessionNumber}`;
+      const newSession = await createSession(sessionName);
+      router.push(`/item-receipt/${newSession.id}`);
+    } catch (error) {
+      console.error("Failed to create session:", error);
+    }
   };
 
   return (
@@ -310,8 +328,8 @@ const InventoryManagementPage = () => {
                       >
                         Set Receipt Date
                       </label>
-                      <div className="flex mt-2 w-[271px]">
-                        <DatePicker />
+                      <div className="flex mt-2">
+                        <DatePicker className="w-[271px]" />
                       </div>
                     </div>
                   </div>
@@ -319,11 +337,14 @@ const InventoryManagementPage = () => {
                 <div className="flex items-center justify-center mt-[90px]">
                   <button
                     type="button"
-                    onClick={() => router.push("/item-receipt")}
+                    onClick={handleBeginReceiving}
+                    disabled={isCreatingSession}
                     className="w-[232px] h-[48px] rounded-md bg-[#194BFB] px-[30px] py-[12px] shadow-sm hover:bg-[#2250f7] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                   >
                     <span className="text-white font-bold text-lg leading-[18px]">
-                      Begin Receiving &#8594;
+                      {isCreatingSession
+                        ? "Creating Session..."
+                        : "Begin Receiving →"}
                     </span>
                   </button>
                 </div>
@@ -334,7 +355,6 @@ const InventoryManagementPage = () => {
         <div className="mt-[76px] ml-6 xl:mr-32">
           <SessionHistory />
         </div>
-        {/* {showModal && <AttachmentModal onClose={() => setShowModal(false)} />} */}
       </div>
     </>
   );
