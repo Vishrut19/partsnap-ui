@@ -1,12 +1,66 @@
 "use client";
+import { useState } from "react";
 import DatePicker from "@/components/DatePicker";
 import SessionHistory from "@/components/SessionHistory";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useParams } from "next/navigation";
 import ScanIcon from "@/components/ScanIcon";
+import useGetTags from "@/hooks/useGetTags";
+import TagComponent from "@/components/TagComponent";
+import useCreateTag from "@/hooks/useCreateTag";
 
 const ItemReceiptPage = () => {
   const { sessionId } = useParams();
+  const [receivingTagQuery, setReceivingTagQuery] = useState("");
+  const [selectedReceivingTags, setSelectedReceivingTags] = useState([]);
+
+  const {
+    createTagType,
+    createTag,
+    isLoading: createTagLoading,
+    error: createTagError,
+  } = useCreateTag();
+
+  const {
+    tags: receivingTags,
+    isLoading,
+    error,
+  } = useGetTags(2, receivingTagQuery);
+
+  const handleReceivingTagSelection = (tag) => {
+    setSelectedReceivingTags((prevTags) => {
+      if (prevTags.some((t) => t.id === tag.id)) {
+        return prevTags.filter((t) => t.id !== tag.id);
+      } else {
+        return [...prevTags, tag];
+      }
+    });
+  };
+
+  const handleAddNewReceivingTag = async () => {
+    try {
+      // Create a new tag with the receiving tag type (tag_type_id: 2)
+      await createTag(receivingTagQuery, 2);
+
+      // Reset the receiving tag query
+      setReceivingTagQuery("");
+
+      // Optionally, you can update the receivingTags list here
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleAddSelectedTags = () => {
+    setSelectedReceivingTags((prevTags) => {
+      const newTags = receivingTags.filter((tag) =>
+        selectedReceivingTags.some((selectedTag) => selectedTag.id === tag.id)
+      );
+      console.log(newTags);
+      return [...new Set([...prevTags, ...newTags])];
+    });
+    setReceivingTagQuery("");
+  };
 
   return (
     <>
@@ -33,7 +87,7 @@ const ItemReceiptPage = () => {
                 </div>
               </div>
             </div>
-            <div className="w-[787px] h-[538px] rounded-[10px] bg-white ml-5 mt-5 shadow-sm">
+            <div className="w-[787px] h-[630px] rounded-[10px] bg-white ml-5 mt-5 shadow-sm">
               <form className="bg-white h-full rounded-[10px]">
                 <div className="flex justify-center px-4 py-6 sm:p-8">
                   <div className="flex flex-col">
@@ -51,7 +105,7 @@ const ItemReceiptPage = () => {
                             name="receiving-tag"
                             placeholder="Search Tag"
                             id="receiving-tag"
-                            // value={receivingTagQuery}
+                            value={receivingTagQuery}
                             onChange={(e) =>
                               setReceivingTagQuery(e.target.value)
                             }
@@ -64,12 +118,38 @@ const ItemReceiptPage = () => {
                         </div>
                         <a
                           href="#"
-                          //   onClick={handleAddNewReceivingTag}
+                          onClick={handleAddNewReceivingTag}
                           className="ml-2 mt-4 text-[#194BFB] text-base font-medium leading-4 underline"
                         >
                           Add New Tag
                         </a>
                       </div>
+                      {isLoading ? (
+                        <p>Loading...</p>
+                      ) : error ? (
+                        <p className="text-red-500">{error}</p>
+                      ) : receivingTagQuery && receivingTags.length === 0 ? (
+                        <p className="text-red-500">TAG NOT FOUND</p>
+                      ) : (
+                        <>
+                          <TagComponent
+                            tags={receivingTags}
+                            selectedTags={selectedReceivingTags}
+                            onTagClick={handleReceivingTagSelection}
+                          />
+                          {receivingTags.length > 0 && (
+                            <button
+                              type="button"
+                              onClick={handleAddSelectedTags}
+                              className="mt-[10px] px-[25px] py-[10px] w-[211px] h-[44px] rounded-[10px] border-[1px] border-[#194BFB] "
+                            >
+                              <span className="font-semibold text-lg leading-[18px] text-[#194BFB] text-nowrap">
+                                Add Selected Tags
+                              </span>
+                            </button>
+                          )}
+                        </>
+                      )}
                     </div>
                     <div className="mt-3 w-[747px] h-[412px] bg-[#F4F7FF] rounded-[10px]">
                       <h1 className="font-semibold text-lg leading-[18px] ml-4 mt-4">
@@ -231,7 +311,7 @@ const ItemReceiptPage = () => {
           </main>
         </div>
         <div className="mt-[76px] ml-6 xl:mr-32">
-          <SessionHistory height="643px" />
+          <SessionHistory height="735px" />
         </div>
       </div>
     </>

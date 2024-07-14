@@ -34,11 +34,14 @@ const InventoryManagementPage = () => {
     error: uploadError,
   } = useUploadAttachment();
 
+  // Receiving Tags
   const {
     tags: receivingTags,
     isLoading,
     error,
   } = useGetTags(2, receivingTagQuery);
+
+  // Customer Tags
   const {
     tags: customerTags,
     isLoading: customerTagsLoading,
@@ -86,6 +89,7 @@ const InventoryManagementPage = () => {
       console.error(error);
     }
   };
+
   // Handle Receiving Tag Selection
   const handleReceivingTagSelection = (tag) => {
     setSelectedReceivingTags((prevTags) => {
@@ -118,6 +122,30 @@ const InventoryManagementPage = () => {
     } catch (error) {
       console.error("Failed to create session:", error);
     }
+  };
+
+  // Selected Receiving Tags
+  const handleAddSelectedReceivingTags = () => {
+    setSelectedReceivingTags((prevTags) => {
+      const newTags = receivingTags.filter((tag) =>
+        selectedReceivingTags.some((selectedTag) => selectedTag.id === tag.id)
+      );
+      console.log(newTags);
+      return [...new Set([...prevTags, ...newTags])];
+    });
+    setReceivingTagQuery("");
+  };
+
+  // Handle Selected Customer Tags
+  const handleAddSelectedCustomerTags = () => {
+    setSelectedCustomerTags((prevTags) => {
+      const newTags = customerTags.filter((tag) =>
+        selectedCustomerTags.some((selectedTag) => selectedTag.id === tag.id)
+      );
+      console.log(newTags);
+      return [...new Set([...prevTags, ...newTags])];
+    });
+    setCustomerTagQuery("");
   };
 
   return (
@@ -196,11 +224,24 @@ const InventoryManagementPage = () => {
                       ) : receivingTagQuery && receivingTags.length === 0 ? (
                         <p className="text-red-500">TAG NOT FOUND</p>
                       ) : (
-                        <TagComponent
-                          tags={receivingTags}
-                          selectedTags={selectedReceivingTags}
-                          onTagClick={handleReceivingTagSelection}
-                        />
+                        <>
+                          <TagComponent
+                            tags={receivingTags}
+                            selectedTags={selectedReceivingTags}
+                            onTagClick={handleReceivingTagSelection}
+                          />
+                          {receivingTags.length > 0 && (
+                            <button
+                              type="button"
+                              onClick={handleAddSelectedReceivingTags}
+                              className="mt-[10px] px-[25px] py-[10px] w-[211px] h-[44px] rounded-[10px] border-[1px] border-[#194BFB] "
+                            >
+                              <span className="font-semibold text-lg leading-[18px] text-[#194BFB] text-nowrap">
+                                Add Selected Tags
+                              </span>
+                            </button>
+                          )}
+                        </>
                       )}
                     </div>
                     <br />
@@ -244,11 +285,24 @@ const InventoryManagementPage = () => {
                       ) : customerTagQuery && customerTags.length == 0 ? (
                         <p className="text-red-500">TAG NOT FOUND</p>
                       ) : (
-                        <TagComponent
-                          tags={customerTags}
-                          selectedTags={selectedCustomerTags}
-                          onTagClick={handleCustomerTagSelection}
-                        />
+                        <>
+                          <TagComponent
+                            tags={customerTags}
+                            selectedTags={selectedCustomerTags}
+                            onTagClick={handleCustomerTagSelection}
+                          />
+                          {customerTags.length > 0 && (
+                            <button
+                              type="button"
+                              onClick={handleAddSelectedCustomerTags}
+                              className="mt-[10px] px-[25px] py-[10px] w-[211px] h-[44px] rounded-[10px] border-[1px] border-[#194BFB]"
+                            >
+                              <span className="font-semibold text-lg leading-[18px] text-[#194BFB] text-nowrap">
+                                Add Selected Tags
+                              </span>
+                            </button>
+                          )}
+                        </>
                       )}
                     </div>
                     <br />
