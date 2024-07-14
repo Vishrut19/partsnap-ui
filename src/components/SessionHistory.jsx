@@ -6,7 +6,7 @@ const SessionHistory = () => {
   const sessions = useGetSessions();
   return (
     <>
-      <div className="w-[300px] h-[836px] overflow-scroll rounded-md border-[#E2E8F0] border-[1px] bg-white">
+      <div className="w-[300px] h-[760px] overflow-scroll rounded-md border-[#E2E8F0] border-[1px] bg-white">
         <h1 className=" flex justify-center text-[#1A202C] leading-5 text-xl font-semibold mt-4">
           Resume Session
         </h1>
