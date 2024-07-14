@@ -19,6 +19,8 @@ const InventoryManagementPage = () => {
   const [customerTagQuery, setCustomerTagQuery] = useState("");
   const [uploadedFileName, setUploadedFileName] = useState("");
   const [uploadedFile, setUploadedFile] = useState(null);
+  const [selectedReceivingTags, setSelectedReceivingTags] = useState([]);
+  const [selectedCustomerTags, setSelectedCustomerTags] = useState([]);
 
   const {
     uploadAttachment,
@@ -77,6 +79,27 @@ const InventoryManagementPage = () => {
     } catch (error) {
       console.error(error);
     }
+  };
+  // Handle Receiving Tag Selection
+  const handleReceivingTagSelection = (tag) => {
+    setSelectedReceivingTags((prevTags) => {
+      if (prevTags.some((t) => t.id === tag.id)) {
+        return prevTags.filter((t) => t.id !== tag.id);
+      } else {
+        return [...prevTags, tag];
+      }
+    });
+  };
+
+  // Handle Customer Tag Selection
+  const handleCustomerTagSelection = (tag) => {
+    setSelectedCustomerTags((prevTags) => {
+      if (prevTags.some((t) => t.id === tag.id)) {
+        return prevTags.filter((t) => t.id !== tag.id);
+      } else {
+        return [...prevTags, tag];
+      }
+    });
   };
 
   return (
@@ -155,7 +178,11 @@ const InventoryManagementPage = () => {
                       ) : receivingTagQuery && receivingTags.length === 0 ? (
                         <p className="text-red-500">TAG NOT FOUND</p>
                       ) : (
-                        <TagComponent tags={receivingTags} />
+                        <TagComponent
+                          tags={receivingTags}
+                          selectedTags={selectedReceivingTags}
+                          onTagClick={handleReceivingTagSelection}
+                        />
                       )}
                     </div>
                     <br />
@@ -199,7 +226,11 @@ const InventoryManagementPage = () => {
                       ) : customerTagQuery && customerTags.length == 0 ? (
                         <p className="text-red-500">TAG NOT FOUND</p>
                       ) : (
-                        <TagComponent tags={customerTags} />
+                        <TagComponent
+                          tags={customerTags}
+                          selectedTags={selectedCustomerTags}
+                          onTagClick={handleCustomerTagSelection}
+                        />
                       )}
                     </div>
                     <br />
