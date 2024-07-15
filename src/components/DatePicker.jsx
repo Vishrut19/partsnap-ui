@@ -2,12 +2,15 @@
 import { useState } from "react";
 import Datepicker from "react-tailwindcss-datepicker";
 
-export default function DatePicker({ className }) {
+export default function DatePicker({ className, onChange }) {
   const [value, setValue] = useState(new Date());
 
   const handleValueChange = (newValue) => {
     console.log("newValue:", newValue);
     setValue(newValue);
+    if (onChange) {
+      onChange(newValue);
+    }
   };
 
   return (

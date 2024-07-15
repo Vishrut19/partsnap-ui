@@ -2,7 +2,11 @@
 import { useState } from "react";
 import DatePicker from "@/components/DatePicker";
 import SessionHistory from "@/components/SessionHistory";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowLongRightIcon,
+  MagnifyingGlassIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import { useParams } from "next/navigation";
 import ScanIcon from "@/components/ScanIcon";
 import useGetTags from "@/hooks/useGetTags";
@@ -13,6 +17,7 @@ const ItemReceiptPage = () => {
   const { sessionId } = useParams();
   const [receivingTagQuery, setReceivingTagQuery] = useState("");
   const [selectedReceivingTags, setSelectedReceivingTags] = useState([]);
+  const [isFormComplete, setIsFormComplete] = useState(false);
 
   const {
     createTagType,
@@ -60,6 +65,25 @@ const ItemReceiptPage = () => {
       return [...new Set([...prevTags, ...newTags])];
     });
     setReceivingTagQuery("");
+  };
+
+  const checkFormCompletion = () => {
+    const requiredFields = [
+      "part-number",
+      "total-quantity",
+      "date-code",
+      "lot-code",
+      "purchase-order-line",
+      "purchase-order",
+      "media-type",
+      "end-customer",
+    ];
+
+    const allFieldsFilled = requiredFields.every(
+      (field) => document.getElementById(field).value.trim() !== ""
+    );
+
+    setIsFormComplete(allFieldsFilled);
   };
 
   return (
@@ -167,6 +191,7 @@ const ItemReceiptPage = () => {
                             type="text"
                             name="part-number"
                             id="part-number"
+                            onChange={checkFormCompletion}
                             className="mt-2 block w-[224px] h-[44px] rounded-[10px] border-white  py-1.5 text-gray-900 ring-1 ring-inset ring-white placeholder:text-[#718096] focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                           />
                         </div>
@@ -180,6 +205,7 @@ const ItemReceiptPage = () => {
                           <input
                             type="text"
                             name="total-quantity"
+                            onChange={checkFormCompletion}
                             id="total-quantity"
                             className="mt-2 block w-[224px] h-[44px] rounded-[10px] border-white  py-1.5 text-gray-900 ring-1 ring-inset ring-white placeholder:text-[#718096] focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                           />
@@ -195,6 +221,7 @@ const ItemReceiptPage = () => {
                             type="text"
                             name="date-code"
                             id="date-code"
+                            onChange={checkFormCompletion}
                             className="mt-2 block w-[224px] h-[44px] rounded-[10px] border-white  py-1.5 text-gray-900 ring-1 ring-inset ring-white placeholder:text-[#718096] focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                           />
                         </div>
@@ -211,6 +238,7 @@ const ItemReceiptPage = () => {
                             type="text"
                             name="lot-code"
                             id="lot-code"
+                            onChange={checkFormCompletion}
                             className="mt-2 block w-[224px] h-[44px] rounded-[10px] border-white  py-1.5 text-gray-900 ring-1 ring-inset ring-white placeholder:text-[#718096] focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                           />
                         </div>
@@ -222,7 +250,10 @@ const ItemReceiptPage = () => {
                             Receipt Date
                           </label>
                           <div className="mt-2">
-                            <DatePicker className="w-[224px]" />
+                            <DatePicker
+                              className="w-[224px]"
+                              onChange={checkFormCompletion}
+                            />
                           </div>
                         </div>
                         <div className="flex flex-col mt-3 ml-4">
@@ -236,6 +267,7 @@ const ItemReceiptPage = () => {
                             type="text"
                             name="purchase-order-line"
                             id="purchase-order-line"
+                            onChange={checkFormCompletion}
                             className="mt-2 block w-[224px] h-[44px] rounded-[10px] border-white  py-1.5 text-gray-900 ring-1 ring-inset ring-white placeholder:text-[#718096] focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                           />
                         </div>
@@ -252,6 +284,7 @@ const ItemReceiptPage = () => {
                             type="text"
                             name="purchase-order"
                             id="purchase-order"
+                            onChange={checkFormCompletion}
                             className="mt-2 block w-[224px] h-[44px] rounded-[10px] border-white  py-1.5 text-gray-900 ring-1 ring-inset ring-white placeholder:text-[#718096] focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                           />
                         </div>
@@ -266,6 +299,7 @@ const ItemReceiptPage = () => {
                             type="text"
                             name="media-type"
                             id="media-type"
+                            onChange={checkFormCompletion}
                             className="mt-2 block w-[224px] h-[44px] rounded-[10px] border-white  py-1.5 text-gray-900 ring-1 ring-inset ring-white placeholder:text-[#718096] focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                           />
                         </div>
@@ -280,6 +314,7 @@ const ItemReceiptPage = () => {
                             type="text"
                             name="end-customer"
                             id="end-customer"
+                            onChange={checkFormCompletion}
                             className="mt-2 block w-[224px] h-[44px] rounded-[10px] border-white  py-1.5 text-gray-900 ring-1 ring-inset ring-white placeholder:text-[#718096] focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                           />
                         </div>
@@ -293,15 +328,50 @@ const ItemReceiptPage = () => {
                             View Notes
                           </span>
                         </button>
-                        <button
-                          type="button"
-                          className="flex items-center justify-center ml-32 w-[138px] h-[48px] border-[1px] bg-[#194BFB] rounded-[10px]"
-                        >
-                          <ScanIcon />
-                          <span className="ml-2 text-white font-bold text-lg leading-[18px]">
-                            Scan
-                          </span>
-                        </button>
+                        {isFormComplete ? (
+                          <div className="flex justify-center items-center ml-9">
+                            <button
+                              type="button"
+                              className=" ml-4 w-[157px] h-[48px] border-[1px] border-[#FB1919] rounded-[10px] mr-4"
+                            >
+                              <div className="flex items-center justify-center">
+                                <span className="text-[#FB1919] font-bold text-lg leading-[18px]">
+                                  Cancel
+                                </span>
+                                <XMarkIcon
+                                  className="ml-3 w-6 h-6 text-[#FB1919]"
+                                  strokeWidth={2}
+                                />
+                              </div>
+                            </button>
+                            <button
+                              type="button"
+                              className="flex ml-4 items-center justify-center w-[157px] h-[48px] bg-[#4EAB37] rounded-[10px]"
+                            >
+                              <div className="flex items-center justify-center">
+                                <span className="text-white font-bold text-lg leading-[18px]">
+                                  Confirm
+                                </span>
+                                <ArrowLongRightIcon
+                                  className="text-white ml-3 w-6 h-6"
+                                  strokeWidth={2}
+                                />
+                              </div>
+                            </button>
+                          </div>
+                        ) : (
+                          <>
+                            <button
+                              type="button"
+                              className="flex items-center justify-center ml-32 w-[138px] h-[48px] border-[1px] bg-[#194BFB] rounded-[10px]"
+                            >
+                              <ScanIcon />
+                              <span className="ml-2 text-white font-bold text-lg leading-[18px]">
+                                Scan
+                              </span>
+                            </button>
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>
