@@ -33,13 +33,13 @@ const SessionHistory = ({ height }) => {
                       <span className="font-bold"> {session.description}</span>
                     </span>
                     <br />
-                    <span className="leading-[13px] mt-2 text-sm font-medium text-[#1A202C]">
+                    {/* <span className="leading-[13px] mt-2 text-sm font-medium text-[#1A202C]">
                       PSID : <span className="font-bold"> {session.name}</span>
                     </span>
                     <br />
                     <span className="leading-[13px] mt-2 text-sm font-medium text-[#1A202C]">
                       UID : <span className="font-bold"> {session.name}</span>
-                    </span>
+                    </span> */}
                   </div>
                   <button
                     type="button"
