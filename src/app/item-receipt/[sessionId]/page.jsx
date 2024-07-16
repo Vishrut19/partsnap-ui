@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DatePicker from "@/components/DatePicker";
 import SessionHistory from "@/components/SessionHistory";
 import {
@@ -13,11 +13,15 @@ import useGetTags from "@/hooks/useGetTags";
 import TagComponent from "@/components/TagComponent";
 import useCreateTag from "@/hooks/useCreateTag";
 import useCreateItemReceipt from "@/hooks/useCreateItemReceipt";
+import axios from "axios";
+import useUpdateSessionTags from "@/hooks/useUpdateSessionTags";
+import useGetSessions from "@/hooks/useGetSessions";
 
 const ItemReceiptPage = () => {
   const { sessionId } = useParams();
   const router = useRouter();
   const [receivingTagQuery, setReceivingTagQuery] = useState("");
+  const [displayedReceivingTags, setDisplayedReceivingTags] = useState([]);
   const [selectedReceivingTags, setSelectedReceivingTags] = useState([]);
   const [isFormComplete, setIsFormComplete] = useState(false);
   const [formData, setFormData] = useState({
@@ -33,6 +37,8 @@ const ItemReceiptPage = () => {
   });
 
   const { createItemReceipt } = useCreateItemReceipt();
+  const { updateSessionTags } = useUpdateSessionTags();
+  const sessions = useGetSessions();
 
   const {
     createTagType,
@@ -124,6 +130,24 @@ const ItemReceiptPage = () => {
     }
   };
 
+  useEffect(() => {
+    if (sessions.length > 0) {
+      const currentSession = sessions.find(
+        (session) => session.id === parseInt(sessionId)
+      );
+      if (currentSession) {
+        setDisplayedReceivingTags(currentSession.tags);
+      }
+    }
+  }, [sessions, sessionId]);
+
+  const handleTagDelete = async (tagToDelete) => {
+    await updateSessionTags(sessionId, [tagToDelete], true);
+    setDisplayedReceivingTags((prevTags) =>
+      prevTags.filter((tag) => tag.id !== tagToDelete.id)
+    );
+  };
+
   return (
     <>
       <div className="bg-[#F4F7FF] lg:pl-72 flex justify-content-between">
@@ -194,11 +218,13 @@ const ItemReceiptPage = () => {
                         <p className="text-red-500">TAG NOT FOUND</p>
                       ) : (
                         <>
-                          <TagComponent
-                            tags={receivingTags}
-                            selectedTags={selectedReceivingTags}
-                            onTagClick={handleReceivingTagSelection}
-                          />
+                          {displayedReceivingTags.length > 0 && (
+                            <TagComponent
+                              tags={displayedReceivingTags}
+                              selectedTags={displayedReceivingTags}
+                              onTagClick={handleTagDelete}
+                            />
+                          )}
                           {receivingTags.length > 0 && (
                             <button
                               type="button"

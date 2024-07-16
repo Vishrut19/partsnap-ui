@@ -120,34 +120,41 @@ const InventoryManagementPage = () => {
     });
   };
 
-  // Handle Begin Receiving
-  const handleBeginReceiving = async () => {
-    try {
-      const nextSessionNumber = sessions.length + 1;
-      const sessionName = `session_${nextSessionNumber}`;
-      const newSession = await createSession(sessionName);
-      router.push(`/item-receipt/${newSession.id}`);
-    } catch (error) {
-      console.error("Failed to create session:", error);
-    }
-  };
-
   // Selected Receiving Tags
-  const handleAddSelectedReceivingTags = async () => {
+  const handleAddSelectedReceivingTags = () => {
     const newTags = receivingTags.filter((tag) =>
       selectedReceivingTags.some((selectedTag) => selectedTag.id === tag.id)
     );
 
-    if (newTags.length > 0 && sessions.length > 0) {
-      const latestSession = sessions[sessions.length - 1];
-      await updateSessionTags(latestSession.id, newTags);
-      setDisplayedReceivingTags((prevTags) => [
-        ...new Set([...prevTags, ...newTags]),
-      ]);
-    }
+    setDisplayedReceivingTags((prevTags) => [
+      ...new Set([...prevTags, ...newTags]),
+    ]);
 
     setSelectedReceivingTags([]);
     setReceivingTagQuery("");
+  };
+
+  // Handle Begin Receiving
+  const handleBeginReceiving = async () => {
+    try {
+      // Create a new session
+      const nextSessionNumber = sessions.length + 1;
+      const sessionName = `session_${nextSessionNumber}`;
+      const newSession = await createSession(sessionName);
+      const sessionId = newSession.id;
+
+      console.log(newSession.name);
+
+      // Add the displayed receiving tags to the new session
+      if (displayedReceivingTags.length > 0) {
+        await updateSessionTags(sessionId, displayedReceivingTags);
+      }
+
+      // Navigate to the new session
+      router.push(`/item-receipt/${sessionId}`);
+    } catch (error) {
+      console.error("Failed to begin receiving:", error);
+    }
   };
 
   const handleReceivingTagDelete = async (tagToDelete) => {
@@ -234,7 +241,6 @@ const InventoryManagementPage = () => {
                           />
                         </div>
                         <a
-                          href="#"
                           onClick={handleAddNewReceivingTag}
                           className="ml-2 mt-4 text-[#194BFB] text-base font-medium leading-4 underline"
                         >
