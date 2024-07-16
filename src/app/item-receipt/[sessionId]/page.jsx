@@ -13,7 +13,6 @@ import useGetTags from "@/hooks/useGetTags";
 import TagComponent from "@/components/TagComponent";
 import useCreateTag from "@/hooks/useCreateTag";
 import useCreateItemReceipt from "@/hooks/useCreateItemReceipt";
-import dayjs from "dayjs";
 
 const ItemReceiptPage = () => {
   const { sessionId } = useParams();
@@ -86,7 +85,7 @@ const ItemReceiptPage = () => {
   const checkFormCompletion = () => {
     const requiredFields = [
       "part_number",
-      "total_quantity",
+      "received_quantity",
       "date_code",
       "lot_code",
       "po_line",
@@ -237,15 +236,15 @@ const ItemReceiptPage = () => {
                         </div>
                         <div className="flex flex-col mt-3 ml-4">
                           <label
-                            htmlFor="total-quantity"
+                            htmlFor="received_quantity"
                             className="block text-sm font-medium leading-[14px] text-[#1A202C]"
                           >
-                            Total Quantity
+                            Received Quantity
                           </label>
                           <input
-                            type="text"
-                            name="total_quantity"
-                            id="total_quantity"
+                            type="number"
+                            name="received_quantity"
+                            id="received_quantity"
                             value={formData.total_quantity}
                             onChange={handleInputChange}
                             className="mt-2 block w-[224px] h-[44px] rounded-[10px] border-white py-1.5 text-gray-900 ring-1 ring-inset ring-white placeholder:text-[#718096] focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
