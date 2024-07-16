@@ -150,6 +150,16 @@ const InventoryManagementPage = () => {
     setReceivingTagQuery("");
   };
 
+  const handleReceivingTagDelete = async (tagToDelete) => {
+    if (sessions.length > 0) {
+      const latestSession = sessions[sessions.length - 1];
+      await updateSessionTags(latestSession.id, [tagToDelete], true);
+      setDisplayedReceivingTags((prevTags) =>
+        prevTags.filter((tag) => tag.id !== tagToDelete.id)
+      );
+    }
+  };
+
   // Handle Selected Customer Tags
   const handleAddSelectedCustomerTags = () => {
     setSelectedCustomerTags((prevTags) => {
@@ -261,8 +271,8 @@ const InventoryManagementPage = () => {
                       {displayedReceivingTags.length > 0 && (
                         <TagComponent
                           tags={displayedReceivingTags}
-                          selectedTags={[]}
-                          onTagClick={() => {}}
+                          selectedTags={displayedReceivingTags}
+                          onTagClick={handleReceivingTagDelete}
                         />
                       )}
                     </div>
