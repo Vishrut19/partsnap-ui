@@ -7,17 +7,33 @@ import {
   MagnifyingGlassIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import ScanIcon from "@/components/ScanIcon";
 import useGetTags from "@/hooks/useGetTags";
 import TagComponent from "@/components/TagComponent";
 import useCreateTag from "@/hooks/useCreateTag";
+import useCreateItemReceipt from "@/hooks/useCreateItemReceipt";
+import dayjs from "dayjs";
 
 const ItemReceiptPage = () => {
   const { sessionId } = useParams();
+  const router = useRouter();
   const [receivingTagQuery, setReceivingTagQuery] = useState("");
   const [selectedReceivingTags, setSelectedReceivingTags] = useState([]);
   const [isFormComplete, setIsFormComplete] = useState(false);
+  const [formData, setFormData] = useState({
+    part_number: "",
+    manufacturer: "",
+    ordered_quantity: 0,
+    received_quantity: 0,
+    date_code: "",
+    lot_code: "",
+    po_line: 0,
+    receiving_session_id: parseInt(sessionId),
+    receipt_date: "",
+  });
+
+  const { createItemReceipt } = useCreateItemReceipt();
 
   const {
     createTagType,
@@ -69,21 +85,44 @@ const ItemReceiptPage = () => {
 
   const checkFormCompletion = () => {
     const requiredFields = [
-      "part-number",
-      "total-quantity",
-      "date-code",
-      "lot-code",
-      "purchase-order-line",
-      "purchase-order",
-      "media-type",
-      "end-customer",
+      "part_number",
+      "total_quantity",
+      "date_code",
+      "lot_code",
+      "po_line",
+      "purchase_order",
+      "media_type",
+      "end_customer",
     ];
 
     const allFieldsFilled = requiredFields.every(
-      (field) => document.getElementById(field).value.trim() !== ""
+      (field) => document.getElementById(field)?.value.trim() !== ""
     );
 
     setIsFormComplete(allFieldsFilled);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+    checkFormCompletion();
+  };
+
+  const handleConfirm = async () => {
+    try {
+      const itemReceiptData = {
+        ...formData,
+        manufacturer: formData.end_customer, // Set manufacturer as end customer
+      };
+      const response = await createItemReceipt(itemReceiptData);
+      console.log("Item receipt created:", response);
+      router.push("/item-receipt");
+    } catch (error) {
+      console.error("Failed to create item receipt:", error);
+    }
   };
 
   return (
@@ -182,16 +221,17 @@ const ItemReceiptPage = () => {
                       <div className="flex flex-row">
                         <div className="flex flex-col mt-3 ml-4">
                           <label
-                            htmlFor="part-number"
+                            htmlFor="part_number"
                             className="block text-sm font-medium leading-[14px] text-[#1A202C]"
                           >
                             Part Number
                           </label>
                           <input
                             type="text"
-                            name="part-number"
-                            id="part-number"
-                            onChange={checkFormCompletion}
+                            name="part_number"
+                            id="part_number"
+                            value={formData.part_number}
+                            onChange={handleInputChange}
                             className="mt-2 block w-[224px] h-[44px] rounded-[10px] border-white  py-1.5 text-gray-900 ring-1 ring-inset ring-white placeholder:text-[#718096] focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                           />
                         </div>
@@ -204,24 +244,26 @@ const ItemReceiptPage = () => {
                           </label>
                           <input
                             type="text"
-                            name="total-quantity"
-                            onChange={checkFormCompletion}
-                            id="total-quantity"
-                            className="mt-2 block w-[224px] h-[44px] rounded-[10px] border-white  py-1.5 text-gray-900 ring-1 ring-inset ring-white placeholder:text-[#718096] focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            name="total_quantity"
+                            id="total_quantity"
+                            value={formData.total_quantity}
+                            onChange={handleInputChange}
+                            className="mt-2 block w-[224px] h-[44px] rounded-[10px] border-white py-1.5 text-gray-900 ring-1 ring-inset ring-white placeholder:text-[#718096] focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                           />
                         </div>
                         <div className="flex flex-col mt-3 ml-4">
                           <label
-                            htmlFor="date-code"
+                            htmlFor="date_code"
                             className="block text-sm font-medium leading-[14px] text-[#1A202C]"
                           >
                             Date Code
                           </label>
                           <input
                             type="text"
-                            name="date-code"
-                            id="date-code"
-                            onChange={checkFormCompletion}
+                            name="date_code"
+                            id="date_code"
+                            value={formData.date_code}
+                            onChange={handleInputChange}
                             className="mt-2 block w-[224px] h-[44px] rounded-[10px] border-white  py-1.5 text-gray-900 ring-1 ring-inset ring-white placeholder:text-[#718096] focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                           />
                         </div>
@@ -229,16 +271,17 @@ const ItemReceiptPage = () => {
                       <div className="flex flex-row mt-2">
                         <div className="flex flex-col mt-3 ml-4">
                           <label
-                            htmlFor="lot-code"
+                            htmlFor="lot_code"
                             className="block text-sm font-medium leading-[14px] text-[#1A202C]"
                           >
                             Lot Code
                           </label>
                           <input
                             type="text"
-                            name="lot-code"
-                            id="lot-code"
-                            onChange={checkFormCompletion}
+                            name="lot_code"
+                            id="lot_code"
+                            value={formData.lot_code}
+                            onChange={handleInputChange}
                             className="mt-2 block w-[224px] h-[44px] rounded-[10px] border-white  py-1.5 text-gray-900 ring-1 ring-inset ring-white placeholder:text-[#718096] focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                           />
                         </div>
@@ -252,22 +295,30 @@ const ItemReceiptPage = () => {
                           <div className="mt-2">
                             <DatePicker
                               className="w-[224px]"
-                              onChange={checkFormCompletion}
+                              onChange={(newValue) => {
+                                const formattedDate = newValue.startDate;
+                                setFormData((prevData) => ({
+                                  ...prevData,
+                                  receipt_date: formattedDate,
+                                }));
+                                checkFormCompletion();
+                              }}
                             />
                           </div>
                         </div>
                         <div className="flex flex-col mt-3 ml-4">
                           <label
-                            htmlFor="purchase-order-line"
+                            htmlFor="po_line"
                             className="block text-sm font-medium leading-[14px] text-[#1A202C]"
                           >
                             Purchase Order Line
                           </label>
                           <input
-                            type="text"
-                            name="purchase-order-line"
-                            id="purchase-order-line"
-                            onChange={checkFormCompletion}
+                            type="number"
+                            name="po_line"
+                            id="po_line"
+                            value={formData.po_line}
+                            onChange={handleInputChange}
                             className="mt-2 block w-[224px] h-[44px] rounded-[10px] border-white  py-1.5 text-gray-900 ring-1 ring-inset ring-white placeholder:text-[#718096] focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                           />
                         </div>
@@ -275,46 +326,47 @@ const ItemReceiptPage = () => {
                       <div className="flex flex-row mt-2">
                         <div className="flex flex-col mt-3 ml-4">
                           <label
-                            htmlFor="purchase-order"
+                            htmlFor="purchase_order"
                             className="block text-sm font-medium leading-[14px] text-[#1A202C]"
                           >
                             Purchase Order
                           </label>
                           <input
                             type="text"
-                            name="purchase-order"
-                            id="purchase-order"
+                            name="purchase_order"
+                            id="purchase_order"
                             onChange={checkFormCompletion}
                             className="mt-2 block w-[224px] h-[44px] rounded-[10px] border-white  py-1.5 text-gray-900 ring-1 ring-inset ring-white placeholder:text-[#718096] focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                           />
                         </div>
                         <div className="flex flex-col mt-3 ml-4">
                           <label
-                            htmlFor="media-type"
+                            htmlFor="media_type"
                             className="block text-sm font-medium leading-[14px] text-[#1A202C]"
                           >
                             Media type or package
                           </label>
                           <input
                             type="text"
-                            name="media-type"
-                            id="media-type"
+                            name="media_type"
+                            id="media_type"
                             onChange={checkFormCompletion}
                             className="mt-2 block w-[224px] h-[44px] rounded-[10px] border-white  py-1.5 text-gray-900 ring-1 ring-inset ring-white placeholder:text-[#718096] focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                           />
                         </div>
                         <div className="flex flex-col mt-3 ml-4">
                           <label
-                            htmlFor="end-customer"
+                            htmlFor="end_customer"
                             className="block text-sm font-medium leading-[14px] text-[#1A202C]"
                           >
                             End Customer
                           </label>
                           <input
                             type="text"
-                            name="end-customer"
-                            id="end-customer"
-                            onChange={checkFormCompletion}
+                            name="end_customer"
+                            id="end_customer"
+                            value={formData.end_customer}
+                            onChange={handleInputChange}
                             className="mt-2 block w-[224px] h-[44px] rounded-[10px] border-white  py-1.5 text-gray-900 ring-1 ring-inset ring-white placeholder:text-[#718096] focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                           />
                         </div>
@@ -346,7 +398,8 @@ const ItemReceiptPage = () => {
                             </button>
                             <button
                               type="button"
-                              className="flex ml-4 items-center justify-center w-[157px] h-[48px] bg-[#4EAB37] rounded-[10px]"
+                              className="flex ml-4 items-center justify-center w-[157px] h-[48px] border-2 bg-[#4EAB37] rounded-[10px]"
+                              onClick={handleConfirm}
                             >
                               <div className="flex items-center justify-center">
                                 <span className="text-white font-bold text-lg leading-[18px]">
