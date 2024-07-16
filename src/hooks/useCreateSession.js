@@ -12,7 +12,7 @@ const useCreateSession = () => {
 
     try {
       const response = await axios.post(
-        "http://ec2-3-110-214-183.ap-south-1.compute.amazonaws.com:8050/sessions/",
+        `${process.env.NEXT_PUBLIC_API_URL}/sessions/`,
         {
           name,
           description: "",
