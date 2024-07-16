@@ -13,6 +13,7 @@ import AttachmentDisplay from "@/components/AttachmentDisplay";
 import PODisplay from "@/components/PODisplay";
 import useCreateSession from "@/hooks/useCreateSession";
 import useGetSessions from "@/hooks/useGetSessions";
+import useUpdateSessionTags from "@/hooks/useUpdateSessionTags";
 
 const InventoryManagementPage = () => {
   const router = useRouter();
@@ -23,8 +24,15 @@ const InventoryManagementPage = () => {
   const [uploadedFile, setUploadedFile] = useState(null);
   const [selectedReceivingTags, setSelectedReceivingTags] = useState([]);
   const [selectedCustomerTags, setSelectedCustomerTags] = useState([]);
+  const [displayedReceivingTags, setDisplayedReceivingTags] = useState([]);
 
   const { createSession, isLoading: isCreatingSession } = useCreateSession();
+
+  const {
+    updateSessionTags,
+    isLoading: isUpdatingTags,
+    error: updateTagsError,
+  } = useUpdateSessionTags();
 
   const sessions = useGetSessions();
 
@@ -125,14 +133,20 @@ const InventoryManagementPage = () => {
   };
 
   // Selected Receiving Tags
-  const handleAddSelectedReceivingTags = () => {
-    setSelectedReceivingTags((prevTags) => {
-      const newTags = receivingTags.filter((tag) =>
-        selectedReceivingTags.some((selectedTag) => selectedTag.id === tag.id)
-      );
-      console.log(newTags);
-      return [...new Set([...prevTags, ...newTags])];
-    });
+  const handleAddSelectedReceivingTags = async () => {
+    const newTags = receivingTags.filter((tag) =>
+      selectedReceivingTags.some((selectedTag) => selectedTag.id === tag.id)
+    );
+
+    if (newTags.length > 0 && sessions.length > 0) {
+      const latestSession = sessions[sessions.length - 1];
+      await updateSessionTags(latestSession.id, newTags);
+      setDisplayedReceivingTags((prevTags) => [
+        ...new Set([...prevTags, ...newTags]),
+      ]);
+    }
+
+    setSelectedReceivingTags([]);
     setReceivingTagQuery("");
   };
 
@@ -242,6 +256,14 @@ const InventoryManagementPage = () => {
                             </button>
                           )}
                         </>
+                      )}
+                      {/* Display selected tags */}
+                      {displayedReceivingTags.length > 0 && (
+                        <TagComponent
+                          tags={displayedReceivingTags}
+                          selectedTags={[]}
+                          onTagClick={() => {}}
+                        />
                       )}
                     </div>
                     <br />
@@ -388,7 +410,7 @@ const InventoryManagementPage = () => {
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center justify-center mt-[90px]">
+                <div className="flex items-center justify-center mt-[60px]">
                   <button
                     type="button"
                     onClick={handleBeginReceiving}
