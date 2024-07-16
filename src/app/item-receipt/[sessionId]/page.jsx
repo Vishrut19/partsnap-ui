@@ -13,7 +13,6 @@ import useGetTags from "@/hooks/useGetTags";
 import TagComponent from "@/components/TagComponent";
 import useCreateTag from "@/hooks/useCreateTag";
 import useCreateItemReceipt from "@/hooks/useCreateItemReceipt";
-import axios from "axios";
 import useUpdateSessionTags from "@/hooks/useUpdateSessionTags";
 import useGetSessions from "@/hooks/useGetSessions";
 
