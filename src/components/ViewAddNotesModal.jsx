@@ -1,3 +1,4 @@
+import { useSessionData } from "@/hooks/useSessionData";
 import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import {
   ArrowLongRightIcon,
@@ -6,8 +7,12 @@ import {
 } from "@heroicons/react/24/outline";
 import { useState } from "react";
 
-export default function ViewAddNotesModal({ onClose, onSave }) {
+export default function ViewAddNotesModal({ onClose, onSave, sessionId }) {
   const [notes, setNotes] = useState("");
+
+  const { sessionData, loading, error } = useSessionData(sessionId);
+
+  if (error) return <div className="text-red-500">Error: {error.message}</div>;
 
   const handleSave = () => {
     onSave(notes);
@@ -34,38 +39,22 @@ export default function ViewAddNotesModal({ onClose, onSave }) {
             </div>
             <div className="flex flex-col w-[756px] h-[92px]">
               <div>
-                <div className="flex justify-between mt-4">
-                  <span className="text-[#1A202C] text-lg leading-5">
-                    RMR | 10/01/2023
-                  </span>
-                  <button className="border-[1.5px] border-transparent">
-                    <TrashIcon className="w-6 h-6 text-[#FF0000]" />
-                  </button>
-                </div>
-                <hr className="mt-3" />
-                <span className="text-[#718096] leading-6 text-base">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                  laboris
-                </span>
-              </div>
-              <div>
-                <div className="flex justify-between mt-4">
-                  <span className="text-[#1A202C] text-lg leading-5">
-                    RMR | 10/01/2023
-                  </span>
-                  <button className="border-[1.5px] border-transparent">
-                    <TrashIcon className="w-6 h-6 text-[#FF0000]" />
-                  </button>
-                </div>
-                <hr className="mt-3" />
-                <span className="text-[#718096] leading-6 text-base">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                  laboris
-                </span>
+                {sessionData?.notes.map((note) => (
+                  <div key={note.id}>
+                    <div className="flex justify-between mt-4">
+                      <span className="text-[#1A202C] text-lg leading-5">
+                        User {note.created_by} | {sessionData.name}
+                      </span>
+                      <button className="border-[1.5px] border-transparent">
+                        <TrashIcon className="w-6 h-6 text-[#FF0000]" />
+                      </button>
+                    </div>
+                    <hr className="mt-3" />
+                    <span className="text-[#718096] leading-6 text-base">
+                      {note.text}
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
             <div className="flex gap-3 mt-36">

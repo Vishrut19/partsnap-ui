@@ -455,6 +455,7 @@ const ItemReceiptPage = () => {
             </div>
             {isNotesModalOpen && (
               <ViewAddNotesModal
+                sessionId={sessionId}
                 onClose={() => setIsNotesModalOpen(false)}
                 onSave={(notes) => {
                   // Handle saving notes
