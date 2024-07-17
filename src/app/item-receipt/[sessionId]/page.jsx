@@ -15,6 +15,7 @@ import useCreateTag from "@/hooks/useCreateTag";
 import useCreateItemReceipt from "@/hooks/useCreateItemReceipt";
 import useUpdateSessionTags from "@/hooks/useUpdateSessionTags";
 import useGetSessions from "@/hooks/useGetSessions";
+import ViewAddNotesModal from "@/components/ViewAddNotesModal";
 
 const ItemReceiptPage = () => {
   const { sessionId } = useParams();
@@ -22,6 +23,7 @@ const ItemReceiptPage = () => {
   const [receivingTagQuery, setReceivingTagQuery] = useState("");
   const [displayedReceivingTags, setDisplayedReceivingTags] = useState([]);
   const [selectedReceivingTags, setSelectedReceivingTags] = useState([]);
+  const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
   const [isFormComplete, setIsFormComplete] = useState(false);
   const [formData, setFormData] = useState({
     part_number: "",
@@ -51,16 +53,6 @@ const ItemReceiptPage = () => {
     isLoading,
     error,
   } = useGetTags(2, receivingTagQuery);
-
-  const handleReceivingTagSelection = (tag) => {
-    setSelectedReceivingTags((prevTags) => {
-      if (prevTags.some((t) => t.id === tag.id)) {
-        return prevTags.filter((t) => t.id !== tag.id);
-      } else {
-        return [...prevTags, tag];
-      }
-    });
-  };
 
   const handleAddNewReceivingTag = async () => {
     try {
@@ -145,6 +137,11 @@ const ItemReceiptPage = () => {
     setDisplayedReceivingTags((prevTags) =>
       prevTags.filter((tag) => tag.id !== tagToDelete.id)
     );
+  };
+
+  // Notes Modal
+  const handleOpenNotesModal = () => {
+    setIsNotesModalOpen(true);
   };
 
   return (
@@ -270,7 +267,7 @@ const ItemReceiptPage = () => {
                             type="number"
                             name="received_quantity"
                             id="received_quantity"
-                            value={formData.total_quantity}
+                            value={formData.received_quantity}
                             onChange={handleInputChange}
                             className="mt-2 block w-[224px] h-[44px] rounded-[10px] border-white py-1.5 text-gray-900 ring-1 ring-inset ring-white placeholder:text-[#718096] focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                           />
@@ -399,6 +396,7 @@ const ItemReceiptPage = () => {
                         <button
                           type="button"
                           className="w-[157px] h-[48px] border-[1px] border-[#194BFB] rounded-[10px]"
+                          onClick={handleOpenNotesModal}
                         >
                           <span className="text-[#194BFB] font-bold text-lg leading-[18px]">
                             View Notes
@@ -455,6 +453,16 @@ const ItemReceiptPage = () => {
                 </div>
               </form>
             </div>
+            {isNotesModalOpen && (
+              <ViewAddNotesModal
+                onClose={() => setIsNotesModalOpen(false)}
+                onSave={(notes) => {
+                  // Handle saving notes
+                  console.log("Saving notes:", notes);
+                  setIsNotesModalOpen(false);
+                }}
+              />
+            )}
           </main>
         </div>
         <div className="mt-[76px] ml-6 xl:mr-32">
