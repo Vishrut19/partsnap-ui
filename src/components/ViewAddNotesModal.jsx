@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useAddNote } from "@/hooks/useAddNote";
 import { useDeleteNote } from "@/hooks/useDeleteNote";
 import { useSessionData } from "@/hooks/useSessionData";
@@ -7,9 +9,9 @@ import {
   TrashIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { useState } from "react";
 
-export default function ViewAddNotesModal({ onClose, onSave, sessionId }) {
+export default function ViewAddNotesModal({ onClose, sessionId }) {
+  const router = useRouter();
   const [notes, setNotes] = useState("");
   const { sessionData, loading, error, refetch } = useSessionData(sessionId);
   const { deleteNote, isDeleting, error: deleteError } = useDeleteNote();
@@ -17,8 +19,23 @@ export default function ViewAddNotesModal({ onClose, onSave, sessionId }) {
 
   if (error) return <div className="text-red-500">Error: {error.message}</div>;
 
-  const handleSave = () => {
-    onSave(notes);
+  const handleSave = async () => {
+    if (notes.trim()) {
+      const result = await addNote(sessionId, notes);
+      if (result) {
+        await refetch();
+      } else {
+        console.error("Failed to add note:", addError);
+      }
+    }
+    onClose();
+    router.push(`/item-receipt/${sessionId}`);
+  };
+
+  const handleCancel = () => {
+    setNotes("");
+    onClose();
+    router.push(`/item-receipt/${sessionId}`);
   };
 
   const handleDeleteNote = async (noteId) => {
@@ -65,7 +82,7 @@ export default function ViewAddNotesModal({ onClose, onSave, sessionId }) {
               <div>
                 {sessionData?.notes.map((note) => (
                   <div key={note.id}>
-                    <div className="flex justify-between mt-4 overflow-scroll">
+                    <div className="flex justify-between mt-4">
                       <span className="text-[#1A202C] text-lg leading-5">
                         User {note.created_by} | {sessionData.name}
                       </span>
@@ -106,6 +123,7 @@ export default function ViewAddNotesModal({ onClose, onSave, sessionId }) {
             <div className="flex justify-center gap-2 mt-16">
               <button
                 type="button"
+                onClick={handleCancel}
                 className=" ml-4 w-[157px] h-[48px] border-[1px] border-[#FB1919] rounded-[10px] mr-4"
               >
                 <div className="flex items-center justify-center">
