@@ -25,6 +25,7 @@ const InventoryManagementPage = () => {
   const [selectedReceivingTags, setSelectedReceivingTags] = useState([]);
   const [selectedCustomerTags, setSelectedCustomerTags] = useState([]);
   const [displayedReceivingTags, setDisplayedReceivingTags] = useState([]);
+  const [displayedCustomerTags, setDisplayedCustomerTags] = useState([]);
 
   const { createSession, isLoading: isCreatingSession } = useCreateSession();
 
@@ -167,16 +168,25 @@ const InventoryManagementPage = () => {
     }
   };
 
-  // Handle Selected Customer Tags
+  // Add Selected Customer Tags
   const handleAddSelectedCustomerTags = () => {
-    setSelectedCustomerTags((prevTags) => {
-      const newTags = customerTags.filter((tag) =>
-        selectedCustomerTags.some((selectedTag) => selectedTag.id === tag.id)
-      );
-      console.log(newTags);
-      return [...new Set([...prevTags, ...newTags])];
-    });
+    const newTags = customerTags.filter((tag) =>
+      selectedCustomerTags.some((selectedTag) => selectedTag.id === tag.id)
+    );
+
+    setDisplayedCustomerTags((prevTags) => [
+      ...new Set([...prevTags, ...newTags]),
+    ]);
+
+    setSelectedCustomerTags([]);
     setCustomerTagQuery("");
+  };
+
+  // Delete/Remove Selected Customer Tags
+  const handleCustomerTagDelete = (tagToDelete) => {
+    setDisplayedCustomerTags((prevTags) =>
+      prevTags.filter((tag) => tag.id !== tagToDelete.id)
+    );
   };
 
   return (
@@ -313,7 +323,7 @@ const InventoryManagementPage = () => {
                           onClick={handleAddNewCustomerTag}
                           className="ml-2 mt-4 text-[#194BFB] text-base font-medium leading-4 underline"
                         >
-                          Add New Tag
+                          Add New Customer Tag
                         </a>
                       </div>
                       {customerTagsLoading ? (
@@ -341,6 +351,13 @@ const InventoryManagementPage = () => {
                             </button>
                           )}
                         </>
+                      )}
+                      {displayedCustomerTags.length > 0 && (
+                        <TagComponent
+                          tags={displayedCustomerTags}
+                          selectedTags={displayedCustomerTags}
+                          onTagClick={handleCustomerTagDelete}
+                        />
                       )}
                     </div>
                     <br />
