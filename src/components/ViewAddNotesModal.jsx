@@ -1,3 +1,4 @@
+import { useDeleteNote } from "@/hooks/useDeleteNote";
 import { useSessionData } from "@/hooks/useSessionData";
 import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import {
@@ -9,13 +10,22 @@ import { useState } from "react";
 
 export default function ViewAddNotesModal({ onClose, onSave, sessionId }) {
   const [notes, setNotes] = useState("");
-
-  const { sessionData, loading, error } = useSessionData(sessionId);
+  const { sessionData, loading, error, refetch } = useSessionData(sessionId);
+  const { deleteNote, isDeleting, error: deleteError } = useDeleteNote();
 
   if (error) return <div className="text-red-500">Error: {error.message}</div>;
 
   const handleSave = () => {
     onSave(notes);
+  };
+
+  const handleDeleteNote = async (noteId) => {
+    const result = await deleteNote(sessionId, noteId);
+    if (result) {
+      refetch();
+    } else {
+      console.error("Failed to delete note:", deleteError);
+    }
   };
 
   return (
@@ -41,11 +51,15 @@ export default function ViewAddNotesModal({ onClose, onSave, sessionId }) {
               <div>
                 {sessionData?.notes.map((note) => (
                   <div key={note.id}>
-                    <div className="flex justify-between mt-4">
+                    <div className="flex justify-between mt-4 overflow-scroll">
                       <span className="text-[#1A202C] text-lg leading-5">
                         User {note.created_by} | {sessionData.name}
                       </span>
-                      <button className="border-[1.5px] border-transparent">
+                      <button
+                        className="border-[1.5px] border-transparent"
+                        onClick={() => handleDeleteNote(note.id)}
+                        disabled={isDeleting}
+                      >
                         <TrashIcon className="w-6 h-6 text-[#FF0000]" />
                       </button>
                     </div>
@@ -57,7 +71,7 @@ export default function ViewAddNotesModal({ onClose, onSave, sessionId }) {
                 ))}
               </div>
             </div>
-            <div className="flex gap-3 mt-36">
+            <div className="flex gap-3 mt-52">
               <textarea
                 rows={4}
                 className="block w-[644px] h-[88px] rounded-md border-[1px] border-[#E2E8F0] py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-[#718096] focus:ring-2 focus:ring-inset focus:ring-indigo-600"
