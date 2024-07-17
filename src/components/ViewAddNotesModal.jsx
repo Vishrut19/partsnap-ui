@@ -1,3 +1,4 @@
+import { useAddNote } from "@/hooks/useAddNote";
 import { useDeleteNote } from "@/hooks/useDeleteNote";
 import { useSessionData } from "@/hooks/useSessionData";
 import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
@@ -12,6 +13,7 @@ export default function ViewAddNotesModal({ onClose, onSave, sessionId }) {
   const [notes, setNotes] = useState("");
   const { sessionData, loading, error, refetch } = useSessionData(sessionId);
   const { deleteNote, isDeleting, error: deleteError } = useDeleteNote();
+  const { addNote, isAdding, error: addError } = useAddNote();
 
   if (error) return <div className="text-red-500">Error: {error.message}</div>;
 
@@ -25,6 +27,18 @@ export default function ViewAddNotesModal({ onClose, onSave, sessionId }) {
       refetch();
     } else {
       console.error("Failed to delete note:", deleteError);
+    }
+  };
+
+  const handleAddNote = async () => {
+    if (notes.trim()) {
+      const result = await addNote(sessionId, notes);
+      if (result) {
+        setNotes("");
+        refetch();
+      } else {
+        console.error("Failed to add note:", addError);
+      }
     }
   };
 
@@ -79,9 +93,13 @@ export default function ViewAddNotesModal({ onClose, onSave, sessionId }) {
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder="Enter Description"
               />
-              <button className="w-[95px] h-[44px] border-[1px] border-[#194BFB] rounded-[10px]">
+              <button
+                onClick={handleAddNote}
+                disabled={isAdding}
+                className="w-[95px] h-[44px] border-[1px] border-[#194BFB] rounded-[10px]"
+              >
                 <span className="text-[#194BFB] leading-[18px] font-bold text-lg">
-                  Add
+                  {isAdding ? "Adding..." : "Add"}
                 </span>
               </button>
             </div>
