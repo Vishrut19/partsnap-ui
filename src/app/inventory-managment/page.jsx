@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DatePicker from "@/components/DatePicker";
 import SessionHistory from "@/components/SessionHistory";
 import TagComponent from "@/components/TagComponent";
@@ -14,6 +14,7 @@ import PODisplay from "@/components/PODisplay";
 import useCreateSession from "@/hooks/useCreateSession";
 import useGetSessions from "@/hooks/useGetSessions";
 import useUpdateSessionTags from "@/hooks/useUpdateSessionTags";
+import useGetSessionDetails from "@/hooks/useGetSessionDetails";
 
 const InventoryManagementPage = () => {
   const router = useRouter();
@@ -22,12 +23,43 @@ const InventoryManagementPage = () => {
   const [customerTagQuery, setCustomerTagQuery] = useState("");
   const [uploadedFileName, setUploadedFileName] = useState("");
   const [uploadedFile, setUploadedFile] = useState(null);
+  const [selectedSessionId, setSelectedSessionId] = useState(null);
   const [selectedReceivingTags, setSelectedReceivingTags] = useState([]);
   const [selectedCustomerTags, setSelectedCustomerTags] = useState([]);
   const [displayedReceivingTags, setDisplayedReceivingTags] = useState([]);
   const [displayedCustomerTags, setDisplayedCustomerTags] = useState([]);
 
   const { createSession, isLoading: isCreatingSession } = useCreateSession();
+  const { sessionDetails, isLoading: isLoadingSessionDetails } =
+    useGetSessionDetails(selectedSessionId);
+
+  useEffect(() => {
+    if (sessionDetails) {
+      // Filter tags based on tag_type_id
+      const receivingTags = sessionDetails.tags.filter(
+        (tag) => tag.tag_type_id === 2
+      );
+      const customerTags = sessionDetails.tags.filter(
+        (tag) => tag.tag_type_id === 1
+      );
+
+      setDisplayedReceivingTags(receivingTags);
+      setDisplayedCustomerTags(customerTags);
+
+      // Set purchase order if available
+      if (sessionDetails.purchase_order) {
+        setUploadedFileName(sessionDetails.purchase_order.name || "");
+        setUploadedFile(sessionDetails.purchase_order.file || null);
+      }
+
+      // Set the date if it's available in sessionDetails
+      // setSelectedDate(sessionDetails.date);
+    }
+  }, [sessionDetails]);
+
+  const handleResumeSession = (session) => {
+    setSelectedSessionId(session.id);
+  };
 
   const {
     updateSessionTags,
@@ -467,7 +499,7 @@ const InventoryManagementPage = () => {
           </main>
         </div>
         <div className="mt-[76px] ml-6 xl:mr-32">
-          <SessionHistory />
+          <SessionHistory onResumeSession={handleResumeSession} />
         </div>
       </div>
     </>

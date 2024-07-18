@@ -2,7 +2,7 @@
 
 import useGetSessions from "@/hooks/useGetSessions";
 
-const SessionHistory = ({ height }) => {
+const SessionHistory = ({ height, onResumeSession }) => {
   const sessions = useGetSessions();
   return (
     <>
@@ -43,6 +43,7 @@ const SessionHistory = ({ height }) => {
                   </div>
                   <button
                     type="button"
+                    onClick={() => onResumeSession(session)}
                     className="mt-[30px] border-[#194BFB] border-[1px] w-[70px] h-[30px] bg-white gap-[10px] px-[6px] pt-[1px] pb-[6px] text-[#194BFB] hover:bg-indigo-100 rounded-[10px]"
                   >
                     <span className="font-bold leading-[14px] text-sm">
