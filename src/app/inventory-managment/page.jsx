@@ -146,11 +146,11 @@ const InventoryManagementPage = () => {
 
       console.log(newSession.name);
 
-      // Add the displayed receiving tags to the new session
-      if (displayedReceivingTags.length > 0) {
-        await updateSessionTags(sessionId, displayedReceivingTags);
+      // Add both receiving and customer tags to the new session
+      const allTags = [...displayedReceivingTags, ...displayedCustomerTags];
+      if (allTags.length > 0) {
+        await updateSessionTags(sessionId, allTags);
       }
-
       // Navigate to the new session
       router.push(`/item-receipt/${sessionId}`);
     } catch (error) {
@@ -158,11 +158,23 @@ const InventoryManagementPage = () => {
     }
   };
 
+  // Delete Receiving Tag
   const handleReceivingTagDelete = async (tagToDelete) => {
     if (sessions.length > 0) {
       const latestSession = sessions[sessions.length - 1];
       await updateSessionTags(latestSession.id, [tagToDelete], true);
       setDisplayedReceivingTags((prevTags) =>
+        prevTags.filter((tag) => tag.id !== tagToDelete.id)
+      );
+    }
+  };
+
+  // Delete Customer Tag
+  const handleCustomerTagDelete = async (tagToDelete) => {
+    if (sessions.length > 0) {
+      const latestSession = sessions[sessions.length - 1];
+      await updateSessionTags(latestSession.id, [tagToDelete], true);
+      setDisplayedCustomerTags((prevTags) =>
         prevTags.filter((tag) => tag.id !== tagToDelete.id)
       );
     }
@@ -180,13 +192,6 @@ const InventoryManagementPage = () => {
 
     setSelectedCustomerTags([]);
     setCustomerTagQuery("");
-  };
-
-  // Delete/Remove Selected Customer Tags
-  const handleCustomerTagDelete = (tagToDelete) => {
-    setDisplayedCustomerTags((prevTags) =>
-      prevTags.filter((tag) => tag.id !== tagToDelete.id)
-    );
   };
 
   return (

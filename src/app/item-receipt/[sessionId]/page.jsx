@@ -127,7 +127,10 @@ const ItemReceiptPage = () => {
         (session) => session.id === parseInt(sessionId)
       );
       if (currentSession) {
-        setDisplayedReceivingTags(currentSession.tags);
+        const receivingTags = currentSession.tags.filter(
+          (tag) => tag.tag_type_id === 2
+        );
+        setDisplayedReceivingTags(receivingTags);
       }
     }
   }, [sessions, sessionId]);
