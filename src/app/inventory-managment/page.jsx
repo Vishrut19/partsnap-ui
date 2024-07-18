@@ -28,6 +28,7 @@ const InventoryManagementPage = () => {
   const [selectedCustomerTags, setSelectedCustomerTags] = useState([]);
   const [displayedReceivingTags, setDisplayedReceivingTags] = useState([]);
   const [displayedCustomerTags, setDisplayedCustomerTags] = useState([]);
+  const [resumedSession, setResumedSession] = useState(null);
 
   const { createSession, isLoading: isCreatingSession } = useCreateSession();
   const { sessionDetails, isLoading: isLoadingSessionDetails } =
@@ -59,6 +60,7 @@ const InventoryManagementPage = () => {
 
   const handleResumeSession = (session) => {
     setSelectedSessionId(session.id);
+    setResumedSession(session);
   };
 
   const {
@@ -170,20 +172,22 @@ const InventoryManagementPage = () => {
   // Handle Begin Receiving
   const handleBeginReceiving = async () => {
     try {
-      // Create a new session
-      const nextSessionNumber = sessions.length + 1;
-      const sessionName = `session_${nextSessionNumber}`;
-      const newSession = await createSession(sessionName);
-      const sessionId = newSession.id;
+      let sessionId;
+      if (resumedSession) {
+        sessionId = resumedSession.id;
+      } else {
+        const nextSessionNumber = sessions.length + 1;
+        const sessionName = `session_${nextSessionNumber}`;
+        const newSession = await createSession(sessionName);
+        sessionId = newSession.id;
+      }
 
-      console.log(newSession.name);
-
-      // Add both receiving and customer tags to the new session
+      // Add both receiving and customer tags to the session
       const allTags = [...displayedReceivingTags, ...displayedCustomerTags];
       if (allTags.length > 0) {
         await updateSessionTags(sessionId, allTags);
       }
-      // Navigate to the new session
+      // Navigate to the session
       router.push(`/item-receipt/${sessionId}`);
     } catch (error) {
       console.error("Failed to begin receiving:", error);
